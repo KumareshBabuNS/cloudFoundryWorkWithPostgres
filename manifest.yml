@@ -1,0 +1,7 @@
+---
+applications:
+  - name: cloudFoundryWorkWithPostgres
+    buildpack: java_buildpack
+    path: target/cloudFoundryWorkWithPostgres-1.0.0.BUILD-SNAPSHOT.jar
+    services:
+      - mysql
