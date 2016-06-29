@@ -19,12 +19,20 @@ It has an [acceptance test suite][acceptance-test] you might like to look at.
 
 
 ###################################################
+# Install Cloud Foundry CLI (followed https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
+###################################################
+cd /nfshome/philippe.brossier/code_perso/cloudFoundryWorkWithPostgres
+curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx
+To verify it is working:./cf help
+
+
+###################################################
 # Running on [Pivotal Web Services][pws]
 ###################################################
 - Log into ORG = brossierpPerso and SPACE = development:
     - details of ORG and SPACE found by logging into https://console.run.pivotal.io/ with brossierp@gmail.com
     - switch to ONS-Guest wifi
-    - cf login -a https://api.run.pivotal.io -u brossierp@gmail.com -o brossierpPerso -s development
+    - ./cf login -a https://api.run.pivotal.io -u brossierp@gmail.com -o brossierpPerso -s development
 
 - Sign up for a cleardb instance:
     - cf create-service cleardb spark mysql
