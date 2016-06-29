@@ -1,13 +1,12 @@
 package org.pongmatcher.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public final class MatchRequest {
 
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="match_request_id_seq")
+    @SequenceGenerator(name="match_request_id_seq", sequenceName="match_request_id_seq", allocationSize=1)
     @Id
     private volatile Long id;
 

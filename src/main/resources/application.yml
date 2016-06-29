@@ -1,10 +1,13 @@
 ---
 spring:
   datasource:
-    driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost/pong_matcher_spring_development
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost/pong_matcher_spring_development
     username: springpong
     password: springpong
+    validation-query: select 1;
+    test-on-borrow: true
+    test-while-idle: true
   jpa:
     hibernate.ddl-auto: none
     show_sql: false

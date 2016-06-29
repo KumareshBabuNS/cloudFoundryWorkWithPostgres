@@ -43,8 +43,12 @@ To verify it is working:./cf help
 - Push the app. Its manifest assumes you called your ClearDB instance 'mysql':
     - cf push --hostname philippemysql
 
-- To verify the status in the web UI
+- To verify the status in the web UI:
     - https://console.run.pivotal.io/ with brossierp@gmail.com
+
+- To test:
+    - export HOST = http://philippemysql.cfapps.io
+    - run the 'To test' section below
 
 - To delete the app if required:
     - cf delete cloudFoundryWorkWithPostgres
@@ -55,44 +59,43 @@ To verify it is working:./cf help
 # To test
 ###################################################
 - To clear the database from any previous tests:
-    - curl -v -X DELETE http://philippemysql.cfapps.io/all
+    - curl -v -X DELETE $HOST/all
     200
 
 - To request a match as “andrew”:
-    - curl -v -H "Content-Type: application/json" -X PUT http://philippemysql.cfapps.io/match_requests/firstrequest -d '{"player": "andrew"}'
+    - curl -v -H "Content-Type: application/json" -X PUT $HOST/match_requests/firstrequest -d '{"player": "andrew"}'
     200 {"uuid":"firstrequest","requesterId":"andrew"}
 
 - To request a match as a different player:
-    - curl -v -H "Content-Type: application/json" -X PUT http://philippemysql.cfapps.io/match_requests/secondrequest -d '{"player": "navratilova"}'
+    - curl -v -H "Content-Type: application/json" -X PUT $HOST/match_requests/secondrequest -d '{"player": "navratilova"}'
     200 {"uuid":"secondrequest","requesterId":"navratilova"}
 
 - To check the status of the first match request:
-    - curl -v -X GET http://philippemysql.cfapps.io/match_requests/firstrequest
-    200 {"match_id":"2762ffb5-55f9-447a-8dc6-816aa0c5e12b","id":"firstrequest","player":"andrew"}
+    - curl -v -X GET $HOST/match_requests/firstrequest
+    200 {"match_id":""b987d227-348f-4a12-9a47-1b436cb7a8da","id":"firstrequest","player":"andrew"}
 
 - Replace MATCH_ID with the match_id value from the previous step in the following command:
-    - curl -v -H "Content-Type: application/json" -X POST http://philippemysql.cfapps.io/results -d ' { "match_id":"2762ffb5-55f9-447a-8dc6-816aa0c5e12b", "winner":"andrew", "loser":"navratilova" }'
+    - curl -v -H "Content-Type: application/json" -X POST $HOST/results -d ' { "match_id":"b987d227-348f-4a12-9a47-1b436cb7a8da", "winner":"andrew", "loser":"navratilova" }'
     201 {"winner":"andrew","loser":"navratilova","match_id":"2762ffb5-55f9-447a-8dc6-816aa0c5e12b"}
 
 
 ###################################################
-# Running locally
+# Running locally with PostgreSQL
 ###################################################
-- Install and start mysql:
-    - yum install mysql
-    - mysql.server start
-    - mysql -u root
+- Install PostgreSQL.
 
-- Create a database user and table in the MySQL REPL you just opened:
-    - CREATE USER 'springpong'@'localhost' IDENTIFIED BY 'springpong';
-    - CREATE DATABASE pong_matcher_spring_development;
-    - GRANT ALL ON pong_matcher_spring_development.* TO 'springpong'@'localhost';
-    - exit
+- Using pgAdmin:
+    - create new Login Role with name = springpong and pwd = springpong
+    - create new Database with name = pong_matcher_spring_development and owner = springpong
 
-- Start the application server from your IDE or the command line:
-    - mvn spring-boot:run
+- To set up privileges:
+    - open a SQL Shell (psql) from the Start Menu
+    - \c pong_matcher_spring_development
+    - GRANT ALL ON DATABASE pong_matcher_spring_development TO springpong;
 
-- Export the test host
+- mvn clean install
+- mvn spring-boot:run
+
+- To test:
     - export HOST=http://localhost:8080
-
-- Follow the 'To test' section above.
+    - follow the 'To test' section above.
