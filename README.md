@@ -107,7 +107,10 @@ To verify it is working:./cf help
 - Sign up for an ElephantSQL instance (as we want to use PostgreSQL):
     - log into https://console.run.pivotal.io/ with brossierp@gmail.com
     - select the Services tab and button 'Add Service'
-    - select ElephantSQL and give name for instance = philippepostgres
+    - select ElephantSQL:
+            - Instance Name = philippepostgres
+            - Add to Space = development
+            - Bind to App = do not bind
     - modify /cloudFoundryWorkWithPostgres/manifest.yml so it reads:
             services:
                   - philippepostgres
@@ -115,16 +118,39 @@ To verify it is working:./cf help
 - Build the app:
     - mvn clean package
 
+- To execute the ground zero script:
+    - log into https://console.run.pivotal.io/ with brossierp@gmail.com
+    - select the ElephantSQL service
+    - click on Manage and it shows:
+        - Hostname = ...
+        - Database name	= ...
+        - Username = ...
+        - Password = ...
+    - All progs > Postgres > SQL Shell with:
+            Server [localhost]: the hostname above
+            Database [postgres]: the db above
+            Port [5432]: 5432
+            Username [postgres]: the username above
+    - Execute all in preinstall.1.0.0.0.sql
+        - DROP USER IF EXISTS springpong;
+        - TODO ERROR:  permission denied to create role
+        - TODO Reason = It is only possible to manage databases and users on dedicated plans. Our dedicated plans are Happy Hippo and Enormous Elephant.
+            - TODO See https://www.elephantsql.com/plans.html for how much it costs.
+        - TODO STart again here once we have a dedicated plan.
+
 - Push the app:
     - cf push --hostname philippetests
+    - TODO Error executing statement at line 3: GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO springpong
+    - TODO Caused by: org.postgresql.util.PSQLException: ERROR: role "springpong" does not exist
 
 - To verify the status in the web UI:
     - https://console.run.pivotal.io/ with brossierp@gmail.com
 
 - To test:
-    - export HOST = http://philippemysql.cfapps.io
+    - export HOST = http://philippetests.cfapps.io
     - run the 'To test' section below
 
 - To clear up our CloudFoundry:
     - cf delete cloudFoundryWorkWithPostgres
     - also remember services: cf delete-service philippepostgres
+    
