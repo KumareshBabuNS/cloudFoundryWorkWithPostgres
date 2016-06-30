@@ -1,7 +1,7 @@
 ###################################################
 # Introduction
 ###################################################
-- Started from https://docs.cloudfoundry.org/buildpacks/java/gsg-spring.html
+- Project started from https://docs.cloudfoundry.org/buildpacks/java/gsg-spring.html
 
 - Sample app obtained with:
     - git clone https://github.com/cloudfoundry-samples/pong_matcher_spring
@@ -18,41 +18,30 @@ It has an [acceptance test suite][acceptance-test] you might like to look at.
 **Note**: We highly recommend that you use the latest versions of any software required by this sample application. For example, make sure that you are using the most recent version of Maven.
 
 
-###################################################
-# Install Cloud Foundry CLI (followed https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
-###################################################
-cd /nfshome/philippe.brossier/code_perso/cloudFoundryWorkWithPostgres
-curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx
-To verify it is working:./cf help
+##################################################
+# To add all the necessary Maven Wrapper files
+#
+# This is only run once and has already been run.
+##################################################
+mvn -N io.takari:maven:wrapper
 
 
 ###################################################
-# Running on [Pivotal Web Services][pws]
+# Running locally with PostgreSQL
 ###################################################
-- Log into ORG = brossierpPerso and SPACE = development:
-    - details of ORG and SPACE found by logging into https://console.run.pivotal.io/ with brossierp@gmail.com
-    - switch to ONS-Guest wifi
-    - cf login -a https://api.run.pivotal.io -u brossierp@gmail.com -p yourPassword -o brossierpPerso -s development
+- Install PostgreSQL.
 
-- Sign up for a cleardb instance (note mysql defined in //cloudFoundryWorkWithPostgres/manifest.yml):
-    - cf create-service cleardb spark mysql
+- Flyway preparation:
+    - All progs > Postgres > SQL Shell
+    - Log in with all the defaults
+    - Execute all in preinstall.1.0.0.0.sql
 
-- Build the app:
-    - mvn clean package
-
-- Push the app. Its manifest assumes you called your ClearDB instance 'mysql':
-    - cf push --hostname philippemysql
-
-- To verify the status in the web UI:
-    - https://console.run.pivotal.io/ with brossierp@gmail.com
+- ./mvnw clean install
+- ./mvnw spring-boot:run
 
 - To test:
-    - export HOST = http://philippemysql.cfapps.io
-    - run the 'To test' section below
-
-- To delete the app if required:
-    - cf delete cloudFoundryWorkWithPostgres
-    - also remember services: cf delete-service mysqlpb
+    - export HOST=http://localhost:8080
+    - follow the 'To test' section below.
 
 
 ###################################################
@@ -80,21 +69,11 @@ To verify it is working:./cf help
 
 
 ###################################################
-# Running locally with PostgreSQL
+# Install Cloud Foundry CLI (followed https://docs.cloudfoundry.org/cf-cli/install-go-cli.html)
 ###################################################
-- Install PostgreSQL.
-
-- Flyway preparation:
-    - All progs > Postgres > SQL Shell
-    - Log in with all the defaults
-    - Execute all in preinstall.1.0.0.0.sql
-
-- mvn clean install
-- mvn spring-boot:run
-
-- To test:
-    - export HOST=http://localhost:8080
-    - follow the 'To test' section above.
+cd /nfshome/philippe.brossier/code_perso/cloudFoundryWorkWithPostgres
+curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx
+To verify it is working:./cf help
 
 
 ###################################################
@@ -116,7 +95,7 @@ To verify it is working:./cf help
                   - philippepostgres
 
 - Build the app:
-    - mvn clean package
+    - ./mvnw clean package
 
 - To execute the ground zero script:
     - log into https://console.run.pivotal.io/ with brossierp@gmail.com
